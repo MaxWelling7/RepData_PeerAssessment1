@@ -18,29 +18,18 @@ Next the mean and median steps per day are shown.
 ```r
 steps.per.day <- aggregate(activities$steps,by=list(activities$date),sum)
 names(steps.per.day) <- c("Date","Total")
-with(steps.per.day,plot(Date,Total,type="h",
-                        main="Total steps per day from 2012-10-01 to 2012-11-30",
-                        xlab="Day",ylab="Total number of steps"))
+hist(steps.per.day$Total,main="Mean total steps per day",
+                      ,breaks=10,xlab="Steps",ylab="Frequency")
 ```
 
 ![](PA1_template_files/figure-html/2. mean total steps per day-1.png)<!-- -->
 
 ```r
-print(paste("Average number of steps per day: ",
-            mean(steps.per.day$Total,na.rm=TRUE)))
+steps.per.day.mean <- mean(steps.per.day$Total,na.rm=TRUE)
+steps.per.day.median <- median(steps.per.day$Total,na.rm=TRUE)
 ```
-
-```
-## [1] "Average number of steps per day:  10766.1886792453"
-```
-
-```r
-print(paste("Median of steps per day: ",median(steps.per.day$Total,na.rm=TRUE)))
-```
-
-```
-## [1] "Median of steps per day:  10765"
-```
+Mean steps per day: 10766.19  
+Median steps per day: 10765
 
 ###What is the average daily activity pattern?
 For each of the 288 timesof day of 5 minutes the average number of steps is calculated.  
@@ -71,7 +60,7 @@ print(paste("time of day with highest average number of steps: ",
 
 ###Imputing missing values
 How many observations are missing?  
-Impute the missing values by taking the average for that interval of the day.
+Impute the missing values by taking the average (mean) for that interval of the day.
 
 ```r
 print(paste("Number of missing values: ",sum(is.na(activities$steps))))
@@ -89,28 +78,18 @@ activities.imputed[is.na(activities.imputed$steps),]$steps <-
 steps.per.day.imputed <- 
   aggregate(activities.imputed$steps,by=list(activities.imputed$date),sum)
 names(steps.per.day.imputed) <- c("Date","Total")
-with(steps.per.day.imputed,plot(Date,Total,type="h",
-                                main="Total number of steps with imputed NA's",
-                                xlab="Day",ylab="Total number of steps"))
+hist(steps.per.day.imputed$Total,main="Mean total steps per day imputed",
+                      ,breaks=10,xlab="Steps",ylab="Frequency")
 ```
 
 ![](PA1_template_files/figure-html/4. Imputing missing values-1.png)<!-- -->
 
 ```r
-print(paste("Average number of steps per day: ",mean(steps.per.day.imputed$Total)))
+steps.per.day.imputed.mean <- mean(steps.per.day.imputed$Total,na.rm=TRUE)
+steps.per.day.imputed.median <- median(steps.per.day.imputed$Total,na.rm=TRUE)
 ```
-
-```
-## [1] "Average number of steps per day:  10766.1886792453"
-```
-
-```r
-print(paste("Median of steps per day: ",median(steps.per.day.imputed$Total)))
-```
-
-```
-## [1] "Median of steps per day:  10766.1886792453"
-```
+Mean steps per day: 10766.19  
+Median steps per day: 1.0766189\times 10^{4}    
 After imputing days with NA's have a value in the plot now too.  
 The mean after imputing does not differ from the mean without imputing.  
 But the median after imputing is now equal to the mean. Without imputing
@@ -144,3 +123,6 @@ xyplot(mean ~ as.numeric(as.character(interval))|day,
 ```
 
 ![](PA1_template_files/figure-html/5. wwekdays vs weekend-1.png)<!-- -->
+  
+There are differences between weekend and workdays:  
+Activity in the weekend is more spread over the day where at workdays it is concentrated before 9.
